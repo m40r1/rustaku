@@ -1,0 +1,79 @@
+#+title: Todo
+
+* css selector
+** https://m.mangatown.com/
+#home page
+*** img
+**** div.cartoon:nth-child > div:nth-child(2) > ul:nth-child(1) > li:nth-child(1) > a:nth-child(1) > img:nth-child(1)
+*** manga
+**** div.cartoon:nth-child > div:nth-child(2) > ul:nth-child(1) > li:nth-child(1) > p:nth-child(2) > a:nth-child(1)
+
+
+** https://m.mangatown.com/directory/0-0-0-0-0-0/1.html .. 1603.html
+#all mangas
+*** img
+.post-list > li:nth-child > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)
+*** link
+.post-list > li:nth-child > div:nth-child(1) > a:nth-child(2)
+*** info
+.post-list > li:nth-child > div:nth-child(1) > a:nth-child(2) >
+div:nth-child(1) > p:nth-child
+
+#i get the href to this
+*** page _max
+#+begin_src rust
+for option in css_selector(){
+	//TODO set url for
+	};
+//css_selector().nodes,parents idk
+
+#+end_src
+
+** https://m.mangatown.com/manga/star_martial_god_technique
+#all chapters
+*** chapter
+.detail-ch-list > li:nth-child > a:nth-child(1)
+.detail-ch-list > li
+
+
+
+
+
+
+** chapters hrefs
+.ch-select > select:nth-child(5) > option
+
+* PROJ base_fns
+** [ ] gen_fs_path
+use fn remove_site &
+https://docs.rs/tokio/0.2.18/tokio/fs/fn.create_dir_all.html
+** [ ] get_manga
+** [ ] get_num_pages
+options selector???
+manga_dir
+** [ ] manga_chs
+** [ ] manga_pgs
+** [ ] manga_cover
+will use bot script
+not a selector
+i liked selectos
+** [ ] manga_info
+** [ ] db to save manga_info
+mongodb looks better
+its just 4 <p>s
+
+** [ ]
+
+* PROJ Models
+** [ ] Manga model
+** [ ] Dir_page
+** [ ] impls
+new impls
+
+** [ ] Chapter?
+#i think this useless
+#can script it
+max_page,current_page
+** [ ] Page?
+ img_link
+ num
