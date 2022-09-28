@@ -3,18 +3,18 @@ use log::error;
 use scraper::{Html, Selector};
 
 //just the chs{string}
-// pub fn get_ch_links(
-//     txt_bot: &reqwest::blocking::Client,
-//     link: &str,
-// ) -> Result<Vec<String>, reqwest::Error> {
-//     let page = txt_bot.get(link).send()?.text()?;
-//     let doc = Html::parse_document(&page);
-//     let selecta = Selector::parse(".detail-ch-list > li > a:nth-child(1)").unwrap();
-//     Ok(doc
-//         .select(&selecta)
-//         .map(|href| -> String { href.value().attr("href").unwrap().to_string() })
-//         .collect::<Vec<String>>())
-// }
+pub fn get_ch_links(
+    txt_bot: &reqwest::blocking::Client,
+    link: &str,
+) -> Result<Vec<String>, reqwest::Error> {
+    let page = txt_bot.get(link).send()?.text()?;
+    let doc = Html::parse_document(&page);
+    let selecta = Selector::parse(".detail-ch-list > li > a:nth-child(1)").unwrap();
+    Ok(doc
+        .select(&selecta)
+        .map(|href| -> String { href.value().attr("href").unwrap().to_string() })
+        .collect::<Vec<String>>())
+}
 
 fn get_ch_pages(page: &Html) -> (usize, Vec<String>) {
     let selecta = Selector::parse(".ch-select > select:nth-child(5) > option").unwrap();
@@ -49,24 +49,33 @@ pub fn get_dir_page(txt_bot: &reqwest::blocking::Client) -> Result<String, reqwe
 pub fn parse_manga(
     links: Vec<String>,
     page: &Html,
+    txt_bot: &reqwest::blocking::Client,
     db: &mongodb::sync::Database,
     location: &String,
 ) -> Result<(), reqwest::Error> {
     links
         .iter()
-        .map(|link| -> () {
+        .map(|link| -> Result<(), reqwest::Error> {
             let manga = Manga::new(
                 get_manga_cover(&page, &link),
                 link.to_string(),
-                Chapter::new(link.to_string(), get_ch_pages(&page)),
+                get_ch_links(&txt_bot, link.as_str())?
+                    .iter()
+                    .map(|link| -> Chapter {
+                        let page = txt_bot.get(link).send().unwrap().text().unwrap();
+                        let page = Html::parse_document(&page);
+                        Chapter::new(link.to_string(), get_ch_pages(&page))
+                    })
+                    .collect(),
                 location.to_string(),
                 get_manga_name(link.to_string()),
             );
 
-            match db.collection::<Manga>("manga").insert_one(manga, None) {
+            match db.collection::<Manga>("tests").insert_one(manga, None) {
                 Ok(_i) => (),
                 Err(e) => error!("failed  to  insert  manga  with  err:{e}"),
             };
+            Ok(())
         })
         .count();
     Ok(())

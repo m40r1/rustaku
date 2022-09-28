@@ -52,7 +52,7 @@ fn main() -> Result<(), reqwest::Error> {
             let page = Html::parse_document(&page);
             let link = get_manga_links(&page);
             debug!("got mangas links");
-            parse_manga(link, &page, &db, &pag)?;
+            parse_manga(link, &page, &txt_bot, &db, &pag)?;
             info!("got all mangas in the page");
 
             Ok(())
@@ -66,6 +66,6 @@ fn gen_db() -> Result<Database, mongodb::error::Error> {
     client_options.app_name = Some("rustaku".to_string());
     let client = Client::with_options(client_options)?;
 
-    let db = client.database("mangas");
+    let db = client.database("img_bot");
     Ok(db)
 }

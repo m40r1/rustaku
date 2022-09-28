@@ -4,7 +4,7 @@ use serde::Serialize;
 pub struct Manga {
     pub cover_src: String,
     pub manga_path: String,
-    pub chs: Chapter,
+    pub chs: Vec<Chapter>,
     pub page_num: String,
     pub manga_name: String,
 }
@@ -13,7 +13,7 @@ impl Manga {
     pub fn new(
         cover_src: String,
         manga_path: String,
-        chs: Chapter,
+        chs: Vec<Chapter>,
         page_num: String,
         manga_name: String,
     ) -> Self {
