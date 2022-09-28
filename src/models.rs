@@ -1,28 +1,40 @@
-// u p  se reqwest::header::InvalidHeaderValue;
+use serde::Serialize;
 
-
-#[derive(Debug)]
+#[derive(Serialize, Debug)]
 pub struct Manga {
     pub cover_src: String,
     pub manga_path: String,
-    pub fs_manga_path: String,
-    pub chs: Vec<String>,
+    pub chs: Chapter,
+    pub page_num: String,
+    pub manga_name: String,
 }
-
-
 
 impl Manga {
     pub fn new(
-		cover_src: String,
-		manga_path: String,
-		fs_manga_path: String,
-		chs: Vec<String>,
-    	) -> Self {
+        cover_src: String,
+        manga_path: String,
+        chs: Chapter,
+        page_num: String,
+        manga_name: String,
+    ) -> Self {
         Self {
-			cover_src,
-			manga_path,
-			fs_manga_path,
-			chs
+            cover_src,
+            manga_path,
+            chs,
+            page_num,
+            manga_name,
         }
+    }
+}
+
+#[derive(Debug, Serialize)]
+pub struct Chapter {
+    pub link: String,
+    pub pages: (usize, Vec<String>),
+}
+
+impl Chapter {
+    pub fn new(link: String, pages: (usize, Vec<String>)) -> Self {
+        Self { link, pages }
     }
 }
